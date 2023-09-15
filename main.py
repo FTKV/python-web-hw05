@@ -58,9 +58,21 @@ def handle_data(data, currency_list):
             for currency_dict in date_result["exchangeRate"]:
                 currency_label = currency_dict["currency"]
                 if currency_label in currency_list:
+                    sale_value = currency_dict.get("saleRate")
+                    if not sale_value:
+                        sale_value = currency_dict.get("saleRateNB")
+                        sale_key = "saleNB"
+                    else:
+                        sale_key = "sale"
+                    purchase_value = currency_dict.get("purchaseRate")
+                    if not purchase_value:
+                        purchase_value = currency_dict.get("purchaseRateNB")
+                        purchase_key = "purchaseNB"
+                    else:
+                        purchase_key = "purchase"
                     date_info[currency_label] = {
-                        "sale": currency_dict["saleRate"],
-                        "purchase": currency_dict["purchaseRate"],
+                        sale_key: sale_value,
+                        purchase_key: purchase_value,
                     }
             date_info = {date: date_info}
         result.append(date_info)
@@ -91,6 +103,7 @@ if __name__ == "__main__":
     except aiohttp.client_exceptions.ContentTypeError:
         print(f"Content error: ", str(error))
         exit(-1)
+    print(data)
     result = handle_data(data, currency_list)
     result = json_view(result)
     print(result)
