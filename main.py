@@ -103,7 +103,6 @@ if __name__ == "__main__":
     except aiohttp.client_exceptions.ContentTypeError:
         print(f"Content error: ", str(error))
         exit(-1)
-    print(data)
     result = handle_data(data, currency_list)
     result = json_view(result)
     print(result)
